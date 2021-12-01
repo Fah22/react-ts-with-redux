@@ -1,27 +1,42 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // declare the type of your initialState variable/value
-interface ReservationState {
-    value: string[]
+interface CustomerState {
+    value: Customer[]
+}
+
+interface Customer {
+    id: string;
+    name: string;
+    food: string[];
+}
+
+interface AddFood {
+    food: string;
+    id: string;
 }
 
 // tell typeScript that your initial state is of type reservationState as defined above
-const initialState: ReservationState = {
+const initialState: CustomerState = {
     value: []
 }
 
-export const reservationSlice = createSlice({
-    name: "reservations",
+export const customerSlice = createSlice({
+    name: "customers",
     initialState,
     reducers: {
-        addReservation: (state, action: PayloadAction<string>) => {
-        state.value.push(action.payload)
+        addCustomer: (state, action: PayloadAction<Customer>) => {
+            state.value.push(action.payload);
         },
-        removeReservation: (state, action: PayloadAction<number>) => {
-        state.value.splice(action.payload, 1)
+        addFoodToCustomer: (state, action: PayloadAction<AddFood>) => {
+            state.value.forEach(customer => {
+                if(customer.id === action.payload.id) {
+                    customer.food.push(action.payload.food)
+                }
+            })
         }
     } 
 })
-export const { addReservation, removeReservation } = reservationSlice.actions
+export const { addCustomer, addFoodToCustomer } = customerSlice.actions
 
-export default reservationSlice.reducer
+export default customerSlice.reducer
